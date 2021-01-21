@@ -29,7 +29,7 @@ public class ArkanoidCanvas extends Canvas {
 		@Override
 		public void paint(Graphics g) {
 			// Pinto el fondo
-			this.setBackground(Color.WHITE);
+			this.setBackground(Color.BLACK);
 			
 			// Pinto cada uno de los actores
 			for (Actor a : this.actores) {

@@ -41,7 +41,7 @@ public class Player extends Actor {
 	@Override
 	public void paint(Graphics g) {
 		//Aqui tendremos al rectangulo que despues sera reemplazado por una barra
-		g.setColor(Color.BLACK);
+		g.setColor(Color.WHITE);
 		g.fillRect(this.x, this.y, this.ancho, this.alto);
 	}
 

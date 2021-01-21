@@ -11,6 +11,8 @@ public class Ladrillo extends Actor {
 	
 	// Propiedades privadas de cada ladrillo
 	private String nombre; // Nombre que recibe el ladrillo
+
+	private int color;
 	
 	/**
 	 * Constructor sin argumentos de entrada
@@ -26,9 +28,10 @@ public class Ladrillo extends Actor {
 	 * @param img
 	 * @param nombre
 	 */
-	public Ladrillo(int x, int y, String img, String nombre, int probabilidadDisparo) {
+	public Ladrillo(int x, int y, String img, String nombre, int color) {
 		super(x, y, img);
 		this.nombre = nombre;
+		this.color = color;
 	}
 	
 	// Acciones de cada ladrillo
@@ -63,7 +66,34 @@ public class Ladrillo extends Actor {
 	 */
 	@Override
 	public void paint(Graphics g) {
-		g.setColor(Color.BLACK);
+		if (color == 0) {
+			g.setColor(Color.RED);
+		}
+		else {
+			if (color == 1) {
+				g.setColor(Color.YELLOW);
+			}
+			else {
+				if (color == 2) {
+					g.setColor(Color.PINK);
+				}
+				else {
+					if (color == 3) {
+						g.setColor(Color.CYAN);
+					}
+					else {
+						if (color == 4) {
+							g.setColor(Color.GREEN);
+						}
+						else {
+							if (color == 5) {
+								g.setColor(Color.ORANGE);
+							}
+						}
+					}
+				}
+			}
+		}
 		g.fillRect(this.x, this.y, this.ancho, this.alto);
 	}
 

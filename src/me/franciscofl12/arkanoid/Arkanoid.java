@@ -1,13 +1,15 @@
 package me.franciscofl12.arkanoid;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -18,17 +20,23 @@ import javax.swing.JOptionPane;
 public class Arkanoid {
 
 	private static int FPS = 60;
+	private static int espacioEntreLadrillosX = 5;
+	private static int espacioEntreLadrillosY = 5;
 	private static JFrame ventana = null;
 	private static List<Actor> actores = new ArrayList<Actor>();
 	private static ArkanoidCanvas canvas = null;
-	
 	/**
 	 * Main
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		ventana = new JFrame("Arkanoid by franciscofl12");
-		ventana.setBounds(0, 0, 400, 600);
+		try {
+			ventana.setIconImage(ImageIO.read(new File("resources.images/icono.png")));
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		ventana.setBounds(0, 0, 360, 600);
 		
 		// Para colocar objetos sobre la ventana debo asignarle un "layout" (plantilla) al panel principal de la ventana
 		ventana.getContentPane().setLayout(new BorderLayout());
@@ -120,19 +128,29 @@ public class Arkanoid {
 		List<Actor> actores = new ArrayList<Actor>();
 		
 		//Construyo un player para este juego y lo agrego a la lista
-		Player jugador = new Player(175, 400, Player.IMAGEN_PLAYER);
+		Player jugador = new Player(155, 400, Player.IMAGEN_PLAYER);
 		actores.add(jugador);
 		
 		//Construyo la bola para el juego y la agrego a la lista
-		Bola bola = new Bola(175,300,Bola.IMAGEN_BOLA);
+		Bola bola = new Bola(155,300,Bola.IMAGEN_BOLA);
 		actores.add(bola);
 		
 		// Creo los Ladrillos del juego
-		for (int i = 0; i < 1; i++) {
-			Ladrillo m = new Ladrillo(0, 0, Ladrillo.IMAGEN_LADRILLO_0, "l", 75);
-			actores.add(m);
+		for (int j=0; j< 6; j++) {
+			espacioEntreLadrillosX = 5;
+			for (int i = 0; i < 12; i++) {
+				Ladrillo l = new Ladrillo(0, 0, Ladrillo.IMAGEN_LADRILLO_0, "l", j);
+				l.x = i*l.getAncho()+espacioEntreLadrillosX;
+				l.y = j*l.getAlto()+espacioEntreLadrillosY;
+				actores.add(l);
+				espacioEntreLadrillosX++;
+				espacioEntreLadrillosX++;
+				espacioEntreLadrillosX++;
+			}
+			espacioEntreLadrillosY ++;
+			espacioEntreLadrillosY ++;
+			espacioEntreLadrillosY ++;
 		}
-		
 		// Devuelvo la lista con todos los actores del juego
 		return actores;
 	}
