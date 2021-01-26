@@ -1,17 +1,18 @@
 package me.franciscofl12.arkanoid;
 
 import java.awt.BorderLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+
+
 
 /**
  * Clase principal, que crea los Ladrillos
@@ -25,17 +26,24 @@ public class Arkanoid {
 	private static JFrame ventana = null;
 	private static List<Actor> actores = new ArrayList<Actor>();
 	private static ArkanoidCanvas canvas = null;
-	/**
-	 * Main
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		ventana = new JFrame("Arkanoid by franciscofl12");
-		try {
-			ventana.setIconImage(ImageIO.read(new File("resources.images/icono.png")));
-		} catch (IOException e1) {
-			e1.printStackTrace();
+	static Player player = null;
+	
+	private static Arkanoid instance = null;
+	
+	public static Arkanoid getInstance () {
+		if (instance == null) { // Si no está inicializada, se inicializa
+			instance = new Arkanoid();
 		}
+		return instance;
+	}
+	
+	public Arkanoid() {
+		ventana = new JFrame("Arkanoid by franciscofl12");
+//		try {
+//			ventana.setIconImage(ImageIO.read(new File("resources.images/icono.png")));
+//		} catch (IOException e1) {
+//			e1.printStackTrace();
+//		}
 		ventana.setBounds(0, 0, 360, 600);
 		
 		// Para colocar objetos sobre la ventana debo asignarle un "layout" (plantilla) al panel principal de la ventana
@@ -43,7 +51,7 @@ public class Arkanoid {
 		
 		// Creo una lista de actores que intervendrá en el juego.
 		actores = creaActores();
-		
+	
 		// Creo y agrego un canvas, es un objeto que permitirá dibujar sobre él
 		canvas = new ArkanoidCanvas(actores);
 		ventana.getContentPane().add(canvas, BorderLayout.CENTER);
@@ -53,6 +61,13 @@ public class Arkanoid {
 		ventana.setVisible(true);
 		//Hago que la ventana no se pueda reescalar, por lo que no me movera los objetos que yo cree
 		ventana.setResizable(false);
+		canvas.addMouseMotionListener(new MouseAdapter() {
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				super.mouseMoved(e);
+				player.mover(e.getX());
+			}			
+		});
 		
 		// Control del evento de cierre de ventana
 		ventana.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -62,13 +77,18 @@ public class Arkanoid {
 				cerrarAplicacion();
 			}
 		});
-		
-		// Comienzo un bucle, que consistirá en el juego completo.
-		juego();
 	}
 	
 	
 	
+	/**
+	 * Main
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		// Comienzo un bucle, que consistirá en el juego completo.
+		Arkanoid.getInstance().juego();
+	}
 	
 	/**
 	 * Al cerrar la aplicación preguntaremos al usuario si está seguro de que desea salir.
@@ -90,7 +110,7 @@ public class Arkanoid {
 	/**
 	 * Bucle del juego principal
 	 */
-	public static void juego () {
+	public void juego () {
 		int millisPorCadaFrame = 1000 / FPS;
 		do {
 			// Redibujo la escena tantas veces por segundo como indique la variable FPS
@@ -128,8 +148,8 @@ public class Arkanoid {
 		List<Actor> actores = new ArrayList<Actor>();
 		
 		//Construyo un player para este juego y lo agrego a la lista
-		Player jugador = new Player(155, 400, Player.IMAGEN_PLAYER);
-		actores.add(jugador);
+		player = new Player(155, 500, Player.IMAGEN_PLAYER);
+		actores.add(player);
 		
 		//Construyo la bola para el juego y la agrego a la lista
 		Bola bola = new Bola(155,300,Bola.IMAGEN_BOLA);
@@ -143,25 +163,16 @@ public class Arkanoid {
 				l.x = i*l.getAncho()+espacioEntreLadrillosX;
 				l.y = j*l.getAlto()+espacioEntreLadrillosY;
 				actores.add(l);
-				espacioEntreLadrillosX++;
-				espacioEntreLadrillosX++;
-				espacioEntreLadrillosX++;
+				espacioEntreLadrillosX++;espacioEntreLadrillosX++;espacioEntreLadrillosX++;
 			}
-			espacioEntreLadrillosY ++;
-			espacioEntreLadrillosY ++;
-			espacioEntreLadrillosY ++;
+			espacioEntreLadrillosY ++;espacioEntreLadrillosY ++;espacioEntreLadrillosY ++;
 		}
 		// Devuelvo la lista con todos los actores del juego
 		return actores;
 	}
-
-	/**
-	 * Obtención de un número aleatorio en unos límites
-	 * @param minimo
-	 * @param maximo
-	 * @return
-	 */
-	private static int numAleatorio (int minimo, int maximo) {
-		return (int) Math.round(Math.random() * (maximo - minimo) + minimo);
+	
+	public ArkanoidCanvas getCanvas() {
+		return canvas;
 	}
+	
 }
