@@ -1,6 +1,8 @@
 package me.franciscofl12.arkanoid;
 
 import java.awt.BorderLayout;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
@@ -67,6 +69,23 @@ public class Arkanoid {
 				super.mouseMoved(e);
 				player.mover(e.getX());
 			}			
+		});
+		canvas.addKeyListener(new KeyAdapter() {
+			
+			public void keyPressed(KeyEvent e) {
+				super.keyPressed(e);
+				int xTecla = player.getX();
+				if (e.getKeyCode() == 39) {
+					xTecla++;xTecla++;xTecla++;xTecla++;
+					player.mover(xTecla);
+				}
+				else {
+					if (e.getKeyCode() == 37) {
+						xTecla--;xTecla--;xTecla--;xTecla--;
+						player.mover(xTecla);
+					}
+				}
+			}
 		});
 		
 		// Control del evento de cierre de ventana
