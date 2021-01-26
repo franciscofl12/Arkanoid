@@ -60,41 +60,15 @@ public class Ladrillo extends Actor {
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
-
 	/**
 	 * Utilizado para pintar un ladrillo, según sus coordenadas de x e y
 	 */
 	@Override
 	public void paint(Graphics g) {
-		if (color == 0) {
-			g.setColor(Color.RED);
-		}
-		else {
-			if (color == 1) {
-				g.setColor(Color.YELLOW);
-			}
-			else {
-				if (color == 2) {
-					g.setColor(Color.PINK);
-				}
-				else {
-					if (color == 3) {
-						g.setColor(Color.CYAN);
-					}
-					else {
-						if (color == 4) {
-							g.setColor(Color.GREEN);
-						}
-						else {
-							if (color == 5) {
-								g.setColor(Color.ORANGE);
-							}
-						}
-					}
-				}
-			}
-		}
-		g.fillRect(this.x, this.y, this.ancho, this.alto);
+		//Creo un array de colores para que cada fila tenga un distinto color
+		Color[] colores = {Color.RED,Color.YELLOW,Color.PINK,Color.CYAN,Color.GREEN,Color.ORANGE};
+		g.setColor(colores[color]);
+		g.fillRoundRect(this.x, this.y, this.ancho, this.alto, 3, 3);
 	}
 
 	@Override

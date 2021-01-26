@@ -6,8 +6,8 @@ public abstract class Actor {
 
 	// Propiedades protegidas (visibles en la propia clase y en los subtipos) de
 	// cada actor
-	protected int x = 0, y = 0; // Coordenadas x e y del actor
-	protected int ancho = 25, alto = 25; // ancho y alto que ocupa el actor en pantalla
+	protected int x , y; // Coordenadas x e y del actor
+	protected int ancho = 25, alto = 20; // ancho y alto que ocupa el actor en pantalla
 	protected String img; // Imagen del actor
 
 	/**

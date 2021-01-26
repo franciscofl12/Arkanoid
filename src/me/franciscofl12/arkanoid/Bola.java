@@ -54,14 +54,14 @@ public class Bola extends Actor {
 		// El monstruo se mueve de manera horizontal, en cada FPS
 		this.x += this.velocidadX;
 		// Si el monstruo abandona la escena por la izquierda o la derecha, rebota
-		if (this.x < 0 || this.x > 335) {
+		if (this.x < 0 || this.x > 330) {
 			this.velocidadX = -this.velocidadX;
 		}
 		
 		// Copiamos el esquema anterior para el movimiento vertical
 		this.y += this.velocidadY;
 		// Si el monstruo abandona la escena por la izquierda o la derecha, rebota
-		if (this.y < 0 || this.y > 555) {
+		if (this.y < 0 || this.y > 550) {
 			this.velocidadY = -this.velocidadY;
 		}
 	}

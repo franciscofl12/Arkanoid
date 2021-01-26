@@ -42,7 +42,7 @@ public class Player extends Actor {
 	public void paint(Graphics g) {
 		//Aqui tendremos al rectangulo que despues sera reemplazado por una barra
 		g.setColor(Color.WHITE);
-		g.fillRect(this.x, this.y, this.ancho, this.alto);
+		g.fillRect(this.x, this.y, 30, 10);
 	}
 
 	@Override
@@ -50,7 +50,15 @@ public class Player extends Actor {
 	
 	}
 
+	public void mover(int x) {
+		this.x = x;
+		// Controlo los casos en los que el jugador pueda salir del Canvas
+		ArkanoidCanvas canvas = Arkanoid.getInstance().getCanvas(); // Referencia al objeto Canvas usado
 
-	// Getters y Setters
+		// Compruebo si el ratón sale por la derecha
+		if (this.x > (canvas.getWidth() - this.ancho)) {
+			this.x = canvas.getWidth() - this.ancho;
+		}
+	}
 	
 }
