@@ -68,8 +68,8 @@ public class Arkanoid {
 		ventana.setVisible(true);
 		//Hago que la ventana no se pueda reescalar, por lo que no me movera los objetos que yo cree
 		ventana.setResizable(false);
-		this.createBufferStrategy(2);
-		strategy = getBufferStrategy();
+//		createBufferStrategy(2);
+//		strategy = getBufferStrategy();
 		canvas.addMouseMotionListener(new MouseAdapter() {
 			@Override
 			public void mouseMoved(MouseEvent e) {
@@ -93,9 +93,11 @@ public class Arkanoid {
 					player.mover(xTecla);
 				}
 				else {
-					if (e.getKeyCode() == 37) {
-						xTecla--;xTecla--;xTecla--;xTecla--;
-						player.mover(xTecla);
+					if (player.getX() > 0) {
+						if (e.getKeyCode() == 37) {
+							xTecla--;xTecla--;xTecla--;xTecla--;
+							player.mover(xTecla);
+						}
 					}
 				}
 			}
@@ -109,16 +111,6 @@ public class Arkanoid {
 				cerrarAplicacion();
 			}
 		});
-	}
-
-	private BufferStrategy getBufferStrategy() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	private void createBufferStrategy(int i) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	/**

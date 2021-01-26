@@ -56,8 +56,8 @@ public class Player extends Actor {
 		ArkanoidCanvas canvas = Arkanoid.getInstance().getCanvas(); // Referencia al objeto Canvas usado
 
 		// Compruebo si el ratón sale por la derecha
-		if (this.x > (canvas.getWidth() - this.ancho)) {
-			this.x = canvas.getWidth() - this.ancho;
+		if (this.x > (canvas.getWidth() - 30)) {
+			this.x = canvas.getWidth() - 30;
 		}
 	}
 	
