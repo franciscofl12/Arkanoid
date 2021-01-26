@@ -7,12 +7,14 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+
 
 
 
@@ -31,6 +33,9 @@ public class Arkanoid {
 	static Player player = null;
 	
 	private static Arkanoid instance = null;
+	
+	// Creo un doble buffer que lo utilizare para que no muestre lagazos a la hora de procesar los ladrillos
+	public BufferStrategy strategy;
 	
 	public static Arkanoid getInstance () {
 		if (instance == null) { // Si no está inicializada, se inicializa
@@ -63,6 +68,8 @@ public class Arkanoid {
 		ventana.setVisible(true);
 		//Hago que la ventana no se pueda reescalar, por lo que no me movera los objetos que yo cree
 		ventana.setResizable(false);
+		this.createBufferStrategy(2);
+		strategy = getBufferStrategy();
 		canvas.addMouseMotionListener(new MouseAdapter() {
 			@Override
 			public void mouseMoved(MouseEvent e) {
@@ -71,6 +78,12 @@ public class Arkanoid {
 			}			
 		});
 		canvas.addKeyListener(new KeyAdapter() {
+			
+			/****
+			 * El codigo de la tecla de direccion derecha es 39, con esto sabremos y podremos
+			 * hacer un simple formato en el cual cuando sea pulsado, la coordenada x se mueva
+			 * para la derecha, y a la izquierda de igual manera.
+			 */
 			
 			public void keyPressed(KeyEvent e) {
 				super.keyPressed(e);
@@ -97,9 +110,17 @@ public class Arkanoid {
 			}
 		});
 	}
-	
-	
-	
+
+	private BufferStrategy getBufferStrategy() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private void createBufferStrategy(int i) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	/**
 	 * Main
 	 * @param args
