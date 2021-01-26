@@ -1,6 +1,8 @@
 package me.franciscofl12.arkanoid;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -31,7 +33,6 @@ public class Arkanoid {
 	private static List<Actor> actores = new ArrayList<Actor>();
 	private static ArkanoidCanvas canvas = null;
 	static Player player = null;
-	
 	private static Arkanoid instance = null;
 	
 	// Creo un doble buffer que lo utilizare para que no muestre lagazos a la hora de procesar los ladrillos
@@ -68,8 +69,6 @@ public class Arkanoid {
 		ventana.setVisible(true);
 		//Hago que la ventana no se pueda reescalar, por lo que no me movera los objetos que yo cree
 		ventana.setResizable(false);
-//		createBufferStrategy(2);
-//		strategy = getBufferStrategy();
 		canvas.addMouseMotionListener(new MouseAdapter() {
 			@Override
 			public void mouseMoved(MouseEvent e) {
@@ -87,15 +86,16 @@ public class Arkanoid {
 			
 			public void keyPressed(KeyEvent e) {
 				super.keyPressed(e);
+				int velocidad = 10;
 				int xTecla = player.getX();
 				if (e.getKeyCode() == 39) {
-					xTecla++;xTecla++;xTecla++;xTecla++;
+					xTecla = xTecla + velocidad;
 					player.mover(xTecla);
 				}
 				else {
-					if (player.getX() > 0) {
+					if (player.getX() > 5) {
 						if (e.getKeyCode() == 37) {
-							xTecla--;xTecla--;xTecla--;xTecla--;
+							xTecla = xTecla - velocidad;
 							player.mover(xTecla);
 						}
 					}
@@ -111,6 +111,9 @@ public class Arkanoid {
 				cerrarAplicacion();
 			}
 		});
+		
+		canvas.createBufferStrategy(2);
+		strategy = canvas.getBufferStrategy();
 	}
 
 	/**
@@ -150,7 +153,7 @@ public class Arkanoid {
 			long millisAntesDeProcesarEscena = new Date().getTime();
 			
 			// Redibujo la escena
-			canvas.repaint();
+			pintaMundo();
 			
 			// Recorro todos los actores, consiguiendo que cada uno de ellos actúe
 			for (Actor a : actores) {
@@ -171,6 +174,20 @@ public class Arkanoid {
 		} while (true);
 	}
 	
+	
+	public void pintaMundo() {
+		
+		Graphics2D g = (Graphics2D) strategy.getDrawGraphics();
+		
+		g.setColor(Color.black);
+		g.fillRect(0, 0,canvas.getWidth(),canvas.getHeight()); 
+		// Pinto cada uno de los actores
+		for (Actor a : this.actores) {
+			a.paint(g);
+		}
+		strategy.show(); 
+	}
+
 	
 	/**
 	 * 
