@@ -93,10 +93,13 @@ public class Arkanoid {
 					player.mover(xTecla);
 				}
 				else {
-					if (player.getX() > 5) {
+					if (player.getX() > 0) {
 						if (e.getKeyCode() == 37) {
 							xTecla = xTecla - velocidad;
 							player.mover(xTecla);
+						}
+						if (player.getX() < 0) {
+							player.setX(0);
 						}
 					}
 				}
@@ -175,6 +178,7 @@ public class Arkanoid {
 	}
 	
 	
+	@SuppressWarnings("static-access")
 	public void pintaMundo() {
 		
 		Graphics2D g = (Graphics2D) strategy.getDrawGraphics();
