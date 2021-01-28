@@ -1,6 +1,7 @@
 package me.franciscofl12.arkanoid;
 
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
 
 public abstract class Actor {
 
@@ -9,6 +10,9 @@ public abstract class Actor {
 	protected int x , y; // Coordenadas x e y del actor
 	protected int ancho = 25, alto = 20; // ancho y alto que ocupa el actor en pantalla
 	protected String img; // Imagen del actor
+	protected static final int VEL_NAVE = 5;
+	protected int velocidadX = 0; // Velocidades en cada eje
+	
 
 	/**
 	 * Constructor sin parámetros de entrada
@@ -101,6 +105,19 @@ public abstract class Actor {
 
 	public void setAlto(int alto) {
 		this.alto = alto;
+	}
+
+	/**
+	 * Cuando una tecla se libera se desactiva la bandera booleana que se hab�a activado al pulsarla
+	 */
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void actua(int x) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

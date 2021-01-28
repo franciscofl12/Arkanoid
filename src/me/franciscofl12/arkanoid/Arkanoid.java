@@ -1,6 +1,7 @@
 package me.franciscofl12.arkanoid;
 
 import java.awt.BorderLayout;
+
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.KeyAdapter;
@@ -69,6 +70,8 @@ public class Arkanoid {
 		ventana.setVisible(true);
 		//Hago que la ventana no se pueda reescalar, por lo que no me movera los objetos que yo cree
 		ventana.setResizable(false);
+		
+		//Creo un mouse listener para detectar el movimiento del raton y mover la nave
 		canvas.addMouseMotionListener(new MouseAdapter() {
 			@Override
 			public void mouseMoved(MouseEvent e) {
@@ -76,37 +79,27 @@ public class Arkanoid {
 				player.mover(e.getX());
 			}			
 		});
+		
+		/****
+		 * El codigo de la tecla de direccion derecha es 39, con esto sabremos y podremos
+		 * hacer un simple formato en el cual cuando sea pulsado, la coordenada x se mueva
+		 * para la derecha, y a la izquierda de igual manera.
+		 */
 		canvas.addKeyListener(new KeyAdapter() {
-			
-			/****
-			 * El codigo de la tecla de direccion derecha es 39, con esto sabremos y podremos
-			 * hacer un simple formato en el cual cuando sea pulsado, la coordenada x se mueva
-			 * para la derecha, y a la izquierda de igual manera.
-			 */
 			
 			public void keyPressed(KeyEvent e) {
 				super.keyPressed(e);
-				int velocidad = 10;
-				int xTecla = player.getX();
-				if (e.getKeyCode() == 39) {
-					xTecla = xTecla + velocidad;
-					player.mover(xTecla);
-				}
-				else {
-					if (player.getX() > 0) {
-						if (e.getKeyCode() == 37) {
-							xTecla = xTecla - velocidad;
-							player.mover(xTecla);
-						}
-						if (player.getX() < 0) {
-							player.setX(0);
-						}
-					}
-				}
+				player.keyPressed(e);
+			}
+			
+			public void keyReleased(KeyEvent e) {
+				super.keyReleased(e);
+				player.keyReleased(e);
 			}
 		});
 		
 		// Control del evento de cierre de ventana
+		canvas.requestFocus();
 		ventana.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		ventana.addWindowListener(new WindowAdapter() {
 			@Override

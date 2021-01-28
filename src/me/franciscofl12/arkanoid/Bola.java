@@ -2,6 +2,7 @@ package me.franciscofl12.arkanoid;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.Date;
 
 /**
  * Esta clase representa las propiedades y acciones de una bola del videojuego SpaceInvaders
@@ -12,6 +13,9 @@ public class Bola extends Actor {
 	int velocidadX = -5;
 	int velocidadY = -5;
 	public static String IMAGEN_BOLA;
+	boolean eastereggbola = false;
+	Color[] colores = {Color.WHITE,Color.YELLOW,Color.PINK,Color.CYAN,Color.GREEN,Color.ORANGE};
+	int color = 0;
 	
 	/**
 	 * Constructor sin argumentos de entrada
@@ -45,24 +49,33 @@ public class Bola extends Actor {
 	 */
 	@Override
 	public void paint(Graphics g) {
-		g.setColor(Color.WHITE);
+		g.setColor(colores[color]);
 		g.fillOval(this.x, this.y, 13, 13);
+		easterEggBola(g);
 	}
+	
 
 	@Override
 	public void actua() {
-		// El monstruo se mueve de manera horizontal, en cada FPS
+		// La bola se mueve de manera horizontal, en cada FPS
 		this.x += this.velocidadX;
-		// Si el monstruo abandona la escena por la izquierda o la derecha, rebota
-		if (this.x < 0 || this.x > 330) {
+		// Si la bola abandona la escena por la izquierda o la derecha, rebota
+		if (this.x < 0 || this.x > Arkanoid.getInstance().getCanvas().getWidth()-13) {
 			this.velocidadX = -this.velocidadX;
 		}
 		
 		// Copiamos el esquema anterior para el movimiento vertical
 		this.y += this.velocidadY;
-		// Si el monstruo abandona la escena por la izquierda o la derecha, rebota
-		if (this.y < 0 || this.y > 550) {
+		// Si la bola abandona la escena por la izquierda o la derecha, rebota
+		if (this.y < 0 || this.y > Arkanoid.getInstance().getCanvas().getHeight()-13) {
 			this.velocidadY = -this.velocidadY;
+		}
+	}
+	
+	public void easterEggBola(Graphics g) {
+		for (int i = 0; i < colores.length; i++) {
+			g.setColor(colores[i]);
+			g.fillOval(this.x, this.y, 13, 13);
 		}
 	}
 
