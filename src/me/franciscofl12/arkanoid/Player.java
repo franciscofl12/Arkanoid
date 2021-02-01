@@ -23,18 +23,8 @@ public class Player extends Actor {
 	 * Constructor por defecto "default constructor"
 	 */
 	public Player() {
-		//super("nave.png");
-		super();
-	}
-
-	/**
-	 * Constructor que inicializa las propiedades del objeto
-	 * @param x
-	 * @param y
-	 * @param img
-	 */
-	public Player(int x, int y, String img) {
-		super(x, y, img);
+		super("nave.png");
+		//super();
 	}
 
 	/**
@@ -50,8 +40,8 @@ public class Player extends Actor {
 	@Override
 	public void paint(Graphics g) {
 		//Aqui tendremos al rectangulo que despues sera reemplazado por una barra
-		g.setColor(Color.WHITE);
-		g.fillRect(this.x, this.y, 30, 10);
+//		g.setColor(Color.WHITE);
+//		g.fillRect(this.x, this.y, 30, 10);
 	}
 
 	@Override

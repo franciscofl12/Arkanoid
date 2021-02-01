@@ -77,9 +77,9 @@ public abstract class Actor {
 	 */
 	public abstract void paint(Graphics g);
 	
-//	public void paint(Graphics2D g){
-//		g.drawImage( this.spriteActual, this.x, this.y, null);
-//	}
+	public void paintNave(Graphics2D g){
+		g.drawImage( this.spriteActual, this.x, this.y, null);
+	}
 	
 	/**
 	 * Método que permite que cada actor realice las acciones que necesite en la

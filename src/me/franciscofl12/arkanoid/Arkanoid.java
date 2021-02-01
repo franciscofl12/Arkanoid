@@ -230,7 +230,9 @@ public class Arkanoid {
 		// Pinto cada uno de los actores
 		for (Actor a : this.actores) {
 			a.paint(g);
+			a.paintNave(g);
 		}
+		
 		strategy.show(); 
 	}
 
@@ -243,10 +245,10 @@ public class Arkanoid {
 		List<Actor> actores = new ArrayList<Actor>();
 		
 		//Construyo un player para este juego y lo agrego a la lista
-		player = new Player(155, 500, Player.IMAGEN_PLAYER);
-//		player = new Player();
-//		player.setX(155);
-//		player.setY(500);
+//		player = new Player(155, 500, Player.IMAGEN_PLAYER);
+		player = new Player();
+		player.setX(155);
+		player.setY(500);
 		actores.add(player);
 		
 		//Construyo la bola para el juego y la agrego a la lista
