@@ -2,8 +2,10 @@ package me.franciscofl12.arkanoid;
 
 import java.awt.BorderLayout;
 
+
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -14,9 +16,9 @@ import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+
 
 
 
@@ -141,7 +143,7 @@ public class Arkanoid {
 	/**
 	 * Bucle del juego principal
 	 */
-	public void juego () {
+	public void juego () {		
 		int millisPorCadaFrame = 1000 / FPS;
 		do {
 			// Redibujo la escena tantas veces por segundo como indique la variable FPS
@@ -150,6 +152,8 @@ public class Arkanoid {
 			
 			// Redibujo la escena
 			pintaMundo();
+			// Actualizo el mundo
+			actualizaMundo();
 			
 			// Recorro todos los actores, consiguiendo que cada uno de ellos actúe
 			for (Actor a : actores) {
@@ -168,6 +172,51 @@ public class Arkanoid {
 				e.printStackTrace();
 			}
 		} while (true);
+	}
+	
+	public void actualizaMundo() {
+		/****
+		 * Creo una lista de los actores que han sido colisionados, si han sido colisionados
+		 * seran anadidos a una lista la cual seran luego borrados de la lista por defecto
+		 */
+		List<Actor> actorsForRemoval = new ArrayList<Actor>();
+		for (Actor actor : actores) {
+			if (actor.isMarkedForRemoval()) {
+				actorsForRemoval.add(actor);
+			}
+		}
+		
+		// Elimino los actores marcados para su eliminacion
+		for (Actor actor : actorsForRemoval) {
+			actores.remove(actor);
+		}
+		
+		// Limpio la lista de actores para eliminar
+		actorsForRemoval.clear();
+		
+		
+		/****
+		 * Para cada actor comprobaremos si tiene una colision con otro actor
+		 * el unico caso posible que deberia de aparecer es que la pelota colisione
+		 * con un rectangulo (ladrillo)
+		 */
+		for (Actor actor1 : actores) {
+			// Creo un rectangulo para este actor.
+			Rectangle rect1 = new Rectangle(actor1.getX(), actor1.getY(), actor1.getAncho(), actor1.getAlto());
+			// Compruebo un actor con cualquier otro actor
+			for (Actor actor2 : actores) {
+				// Evito comparar un actor consigo mismo, ya que eso siempre provocaria una colision y no tiene sentido
+				if (!actor1.equals(actor2)) {
+					// Formo el rectangulo del actor 2
+					Rectangle rect2 = new Rectangle(actor2.getX(), actor2.getY(), actor2.getAncho(), actor2.getAlto());
+					// Si los dos rectangulos tienen alguna interseccion, notifico una colision en los dos actores
+					if (rect1.intersects(rect2)) {
+						actor1.collisionWith(actor2); // El actor 1 colisiona con el actor 2
+						actor2.collisionWith(actor1); // El actor 2 colisiona con el actor 1
+					}
+				}
+			}
+		}
 	}
 	
 	
@@ -195,6 +244,9 @@ public class Arkanoid {
 		
 		//Construyo un player para este juego y lo agrego a la lista
 		player = new Player(155, 500, Player.IMAGEN_PLAYER);
+//		player = new Player();
+//		player.setX(155);
+//		player.setY(500);
 		actores.add(player);
 		
 		//Construyo la bola para el juego y la agrego a la lista

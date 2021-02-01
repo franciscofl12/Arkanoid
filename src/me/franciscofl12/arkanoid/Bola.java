@@ -3,6 +3,7 @@ package me.franciscofl12.arkanoid;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Esta clase representa las propiedades y acciones de una bola del videojuego SpaceInvaders
@@ -73,10 +74,10 @@ public class Bola extends Actor {
 	}
 	
 	public void easterEggBola(Graphics g) {
-		for (int i = 0; i < colores.length; i++) {
+			int i = 1;
+			i++;
 			g.setColor(colores[i]);
 			g.fillOval(this.x, this.y, 13, 13);
-		}
 	}
 
 }

@@ -3,6 +3,11 @@ package me.franciscofl12.arkanoid;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
+import java.net.URL;
+
+import javax.imageio.ImageIO;
 
 /**
  * Clase que representa un player en el juego
@@ -18,6 +23,7 @@ public class Player extends Actor {
 	 * Constructor por defecto "default constructor"
 	 */
 	public Player() {
+		//super("nave.png");
 		super();
 	}
 
@@ -109,5 +115,6 @@ public class Player extends Actor {
 		if (left && (this.x > 0)) this.velocidadX = -VEL_NAVE;
 		if (right) this.velocidadX = VEL_NAVE;
 	}
+
 
 }

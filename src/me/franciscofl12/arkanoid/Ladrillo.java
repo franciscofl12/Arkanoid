@@ -44,7 +44,6 @@ public class Ladrillo extends Actor {
 				+ ", getY()=" + getY() + ", getImg()=" + getImg() + "]";
 	}
 
-	
 	// Getters y Setters 
 	
 	/**
@@ -74,5 +73,17 @@ public class Ladrillo extends Actor {
 	@Override
 	public void actua() {
 	}
-
+	
+	/**
+	 * Metodo que determina el comportamiento cuando este actor colisione con otro
+	 */
+	@Override
+	public void collisionWith(Actor actorCollisioned) {
+		super.collisionWith(actorCollisioned);
+		//Compruebo si el ladrillo colisiona con la bola
+		if (actorCollisioned instanceof Bola) {
+			// Si este actor colisiona, debo eliminar el monstruo
+			this.setMarkedForRemoval(true);
+		}
+	}
 }
