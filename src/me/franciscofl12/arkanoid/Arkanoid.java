@@ -1,8 +1,6 @@
 package me.franciscofl12.arkanoid;
 
 import java.awt.BorderLayout;
-
-
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -18,10 +16,6 @@ import java.util.Date;
 import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-
-
-
-
 
 /**
  * Clase principal, que crea los Ladrillos

@@ -1,13 +1,7 @@
 package me.franciscofl12.arkanoid;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
-import java.net.URL;
-
-import javax.imageio.ImageIO;
 
 /**
  * Clase que representa un player en el juego
