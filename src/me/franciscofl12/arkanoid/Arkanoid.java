@@ -30,8 +30,8 @@ public class Arkanoid {
 	private static List<Actor> actores = new ArrayList<Actor>();
 	private static ArkanoidCanvas canvas = null;
 	static Player player = null;
+	static Bola bola = null;
 	private static Arkanoid instance = null;
-	private static boolean GameStart = false;
 	// Lista con actores que deben incorporarse en la siguiente iteracion del juego
 	private List<Actor> newActorsForNextIteration = new ArrayList<Actor>();
 	
@@ -76,7 +76,10 @@ public class Arkanoid {
 			public void mouseMoved(MouseEvent e) {
 				super.mouseMoved(e);
 				player.mover(e.getX());
-			}			
+			}	
+			public void mouseClicked(MouseEvent e) {
+				player.setSpace(true);
+			}
 		});
 		
 		/****
@@ -89,7 +92,10 @@ public class Arkanoid {
 			public void keyPressed(KeyEvent e) {
 				super.keyPressed(e);
 				player.keyPressed(e);
-//				if (e.getKeyCode() == 32) GameStart = true ;
+				if (player.isSpace()) {
+					bola.velocidadY = 5;
+					bola.velocidadX = 5;
+				}
 			}
 			
 			public void keyReleased(KeyEvent e) {
@@ -187,6 +193,11 @@ public class Arkanoid {
 				actorsForRemoval.add(actor);
 			}
 		}
+		// Reviso si le han dado al espacio para estar pegado a la barra
+		if (player.isSpace() == false) {
+			bola.setX(player.getX()+12);
+			bola.setY(player.getY()-20);
+		}
 		
 		// Elimino los actores marcados para su eliminacion
 		for (Actor actor : actorsForRemoval) {
@@ -260,13 +271,13 @@ public class Arkanoid {
 		
 		//Construyo la bola para el juego y la agrego a la lista
 //		Bola bola = new Bola(155,300,Bola.IMAGEN_BOLA);
-		Bola bola = new Bola();
+		bola = new Bola();
 //		while (GameStart = false) {
 //			bola.setX(155);
 //			bola.setY(player.getAncho()/2);
 //		}
-		bola.setX(155);
-		bola.setY(300);
+		bola.setX(player.getX()+12);
+		bola.setY(player.getY()-20);
 		actores.add(bola);
 		
 		// Creo los Ladrillos del juego

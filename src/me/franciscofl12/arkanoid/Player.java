@@ -11,7 +11,7 @@ public class Player extends Actor {
 
 	public static String IMAGEN_PLAYER = "nave.png";
 	@SuppressWarnings("unused")
-	private boolean left,right; // Booleanas que determinan si la nave se esta moviendo actualmente
+	private boolean left,right,space = false; // Booleanas que determinan si la nave se esta moviendo actualmente
 
 	/**
 	 * Constructor por defecto "default constructor"
@@ -77,6 +77,7 @@ public class Player extends Actor {
 	  	switch (e.getKeyCode()) {
 			case KeyEvent.VK_LEFT : left = true; break;
 			case KeyEvent.VK_RIGHT : right = true; break;
+			case KeyEvent.VK_SPACE : space = true; break;
 	  	}
 	  	updateSpeed();
 	}
@@ -89,6 +90,7 @@ public class Player extends Actor {
 		switch (e.getKeyCode()) {
   			case KeyEvent.VK_LEFT : left = false; break; 
   			case KeyEvent.VK_RIGHT : right = false;break;
+  			case KeyEvent.VK_SPACE : space = true; break;
 		}
 		updateSpeed();
 	}
@@ -100,5 +102,12 @@ public class Player extends Actor {
 		if (right) this.velocidadX = VEL_NAVE;
 	}
 
+	public boolean isSpace() {
+		return space;
+	}
+
+	public void setSpace(boolean space) {
+		this.space = space;
+	}
 
 }

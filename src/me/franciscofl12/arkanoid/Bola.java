@@ -11,11 +11,10 @@ import java.util.concurrent.TimeUnit;
 public class Bola extends Actor {
 	
 	// Propiedades privadas de la bola
-	int velocidadX = -5;
-	int velocidadY = -5;
+	public static int velocidadX = 0;
+	public static int velocidadY = 0;
 	public static String IMAGEN_BOLA = "pelota.png";
 	boolean eastereggbola = false;
-	protected static final int VEL_BOLA = 5;
 	Color[] colores = {Color.WHITE,Color.YELLOW,Color.PINK,Color.CYAN,Color.GREEN,Color.ORANGE};
 	int color = 0;
 	
@@ -98,5 +97,24 @@ public class Bola extends Actor {
 			g.setColor(colores[i]);
 			g.fillOval(this.x, this.y, 13, 13);
 	}
+
+	public int getVelocidadX() {
+		return velocidadX;
+	}
+
+	public void setVelocidadX(int velocidadX) {
+		this.velocidadX = velocidadX;
+	}
+
+	public int getVelocidadY() {
+		return velocidadY;
+	}
+
+	public void setVelocidadY(int velocidadY) {
+		this.velocidadY = velocidadY;
+	}
+	
+	
+	
 	
 }
