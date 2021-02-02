@@ -1,24 +1,27 @@
 package me.franciscofl12.arkanoid;
 
 import java.awt.Color;
+
 import java.awt.Graphics;
 
 /**
  * Esta clase representa las propiedades y acciones de un ladrillo del videojuego SpaceInvaders
  */
 public class Ladrillo extends Actor {
-	public static String IMAGEN_LADRILLO_0;
+	
+	public static String IMAGEN_LADRILLO = "ladrillorojo.png";
 	
 	// Propiedades privadas de cada ladrillo
 	private String nombre; // Nombre que recibe el ladrillo
-
+	String[] colores = {"ladrillorojo.png","ladrilloamarillo.png","ladrillorosa.png","ladrilloazul.png","ladrilloverde.png","ladrillonaranja.png"};
 	private int color;
 	
 	/**
 	 * Constructor sin argumentos de entrada
 	 */
-	public Ladrillo() {
-		super();
+	public Ladrillo(int color) {
+		super(IMAGEN_LADRILLO);	
+		IMAGEN_LADRILLO = colores[color];
 	}
 
 	/**
@@ -65,9 +68,8 @@ public class Ladrillo extends Actor {
 	@Override
 	public void paint(Graphics g) {
 		//Creo un array de colores para que cada fila tenga un distinto color
-		Color[] colores = {Color.RED,Color.YELLOW,Color.PINK,Color.CYAN,Color.GREEN,Color.ORANGE};
-		g.setColor(colores[color]);
-		g.fillRoundRect(this.x, this.y, this.ancho, this.alto, 3, 3);
+//		g.setColor(colores[color]);
+//		g.fillRoundRect(this.x, this.y, this.ancho, this.alto, 3, 3);
 	}
 
 	@Override
@@ -82,8 +84,19 @@ public class Ladrillo extends Actor {
 		super.collisionWith(actorCollisioned);
 		//Compruebo si el ladrillo colisiona con la bola
 		if (actorCollisioned instanceof Bola) {
-			// Si este actor colisiona, debo eliminar el monstruo
+			// Si este actor colisiona, debo eliminar el ladrilo
 			this.setMarkedForRemoval(true);
+			//Crearemos una explosion , que ejecutara una secuencia de sprites
+			createExplosion();
+			// Lanzo el sonido que corresponde a una explosi�n
+		   	ArkanoidSound.getInstance().playSound(ArkanoidSound.getInstance().LADRILLOELIMINADO);
 		}
+	}
+	
+	private void createExplosion () {
+		Explosion explosion = new Explosion();
+		explosion.setX(this.x); 
+		explosion.setY(this.y); 
+        Arkanoid.getInstance().addNewActorToNextIteration(explosion);
 	}
 }

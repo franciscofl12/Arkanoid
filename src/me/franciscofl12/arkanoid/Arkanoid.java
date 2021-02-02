@@ -31,6 +31,9 @@ public class Arkanoid {
 	private static ArkanoidCanvas canvas = null;
 	static Player player = null;
 	private static Arkanoid instance = null;
+	private static boolean GameStart = false;
+	// Lista con actores que deben incorporarse en la siguiente iteracion del juego
+	private List<Actor> newActorsForNextIteration = new ArrayList<Actor>();
 	
 	// Creo un doble buffer que lo utilizare para que no muestre lagazos a la hora de procesar los ladrillos
 	public BufferStrategy strategy;
@@ -86,6 +89,7 @@ public class Arkanoid {
 			public void keyPressed(KeyEvent e) {
 				super.keyPressed(e);
 				player.keyPressed(e);
+//				if (e.getKeyCode() == 32) GameStart = true ;
 			}
 			
 			public void keyReleased(KeyEvent e) {
@@ -103,9 +107,12 @@ public class Arkanoid {
 				cerrarAplicacion();
 			}
 		});
-		
+			
 		canvas.createBufferStrategy(2);
 		strategy = canvas.getBufferStrategy();
+		
+		//Pongo en bucle la musica de fondo
+		ArkanoidSound.getInstance().loopSound(ArkanoidSound.MUSICA);
 	}
 
 	/**
@@ -137,7 +144,7 @@ public class Arkanoid {
 	/**
 	 * Bucle del juego principal
 	 */
-	public void juego () {		
+	public void juego () {
 		int millisPorCadaFrame = 1000 / FPS;
 		do {
 			// Redibujo la escena tantas veces por segundo como indique la variable FPS
@@ -188,6 +195,11 @@ public class Arkanoid {
 		// Limpio la lista de actores para eliminar
 		actorsForRemoval.clear();
 		
+		// Añado los nuevos actores(explosiones) para hacer una animacion cuando el ladrillo desaparezca
+		Arkanoid.actores.addAll(newActorsForNextIteration);
+		this.newActorsForNextIteration.clear();
+		
+		
 		
 		/****
 		 * Para cada actor comprobaremos si tiene una colision con otro actor
@@ -224,7 +236,7 @@ public class Arkanoid {
 		// Pinto cada uno de los actores
 		for (Actor a : this.actores) {
 			a.paint(g);
-			a.paintNave(g);
+			a.paintImagen(g);
 		}
 		
 		strategy.show(); 
@@ -246,14 +258,28 @@ public class Arkanoid {
 		actores.add(player);
 		
 		//Construyo la bola para el juego y la agrego a la lista
-		Bola bola = new Bola(155,300,Bola.IMAGEN_BOLA);
+//		Bola bola = new Bola(155,300,Bola.IMAGEN_BOLA);
+		Bola bola = new Bola();
+//		while (GameStart = false) {
+//			bola.setX(155);
+//			bola.setY(player.getAncho()/2);
+//		}
+		bola.setX(155);
+		bola.setY(300);
 		actores.add(bola);
 		
 		// Creo los Ladrillos del juego
 		for (int j=0; j< 6; j++) {
+			int aux = j; 
 			espacioEntreLadrillosX = 5;
 			for (int i = 0; i < 12; i++) {
-				Ladrillo l = new Ladrillo(0, 0, Ladrillo.IMAGEN_LADRILLO_0, "l", j);
+				if (i == 11) {
+					aux++;
+					if (aux == 6) {
+						aux--;
+					}
+				}
+				Ladrillo l = new Ladrillo(aux);
 				l.x = i*l.getAncho()+espacioEntreLadrillosX;
 				l.y = j*l.getAlto()+espacioEntreLadrillosY;
 				actores.add(l);
@@ -268,5 +294,10 @@ public class Arkanoid {
 	public ArkanoidCanvas getCanvas() {
 		return canvas;
 	}
+
+	public void addNewActorToNextIteration (Actor newActor) {
+		this.newActorsForNextIteration.add(newActor);
+	}
+
 	
 }

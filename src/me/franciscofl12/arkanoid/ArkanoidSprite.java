@@ -8,15 +8,15 @@ import javax.imageio.ImageIO;
 
 public class ArkanoidSprite {
 	
-	// El almacen de im�genes se mapear� con un objeto de tipo HashMap<String, BufferedImage>
-		// En este tipo de HashMap todas las claves (keys) ser�n de tipo String y todas los objetos
-		// almacenados ser�n de tipo BufferedImage
+	// El almacen de imagenes se mapeara con un objeto de tipo HashMap<String, BufferedImage>
+		// En este tipo de HashMap todas las claves (keys) seran de tipo String y todas los objetos
+		// almacenados seran de tipo BufferedImage
 		private HashMap<String, BufferedImage> sprites = new HashMap<String, BufferedImage>();
 		
 		// Variable principal del patron Singleton
 		private static ArkanoidSprite instance = null;
 		
-		// Carpeta en la que se encuentran los recursos: im�genes, sonidos, etc.
+		// Carpeta en la que se encuentran los recursos: imagenes, sonidos, etc.
 		private static String RESOURCES_FOLDER = "res/";
 		
 		/**
@@ -26,7 +26,7 @@ public class ArkanoidSprite {
 		}
 		
 		/**
-		 * M�todo principal del patr�n Singleton
+		 * Metodo principal del patron Singleton
 		 * @return
 		 */
 		public static ArkanoidSprite getInstance() {
@@ -71,7 +71,7 @@ public class ArkanoidSprite {
 			// En caso de que el objeto BufferedImage no exista dentro del HashMap, se carga desde el disco duro
 			if (img == null) {
 				img = loadImage(RESOURCES_FOLDER + resourceName);
-				// Una vez que cargo el recurso en la memoria, lo agrego al HashMap, as� no habr� que volver a 
+				// Una vez que cargo el recurso en la memoria, lo agrego al HashMap, asi no habra que volver a 
 				// buscarlo en el disco duro. Como "clave" del objeto en el HashMap utilizo el nombre del fichero
 				sprites.put(resourceName, img);
 			}

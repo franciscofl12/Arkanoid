@@ -9,7 +9,7 @@ import java.awt.event.KeyEvent;
  */
 public class Player extends Actor {
 
-	public static String IMAGEN_PLAYER;
+	public static String IMAGEN_PLAYER = "nave.png";
 	@SuppressWarnings("unused")
 	private boolean left,right; // Booleanas que determinan si la nave se esta moviendo actualmente
 
@@ -17,7 +17,7 @@ public class Player extends Actor {
 	 * Constructor por defecto "default constructor"
 	 */
 	public Player() {
-		super("nave.png");
+		super(IMAGEN_PLAYER);
 		//super();
 	}
 

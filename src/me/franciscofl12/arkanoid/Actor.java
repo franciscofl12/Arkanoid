@@ -1,6 +1,7 @@
 package me.franciscofl12.arkanoid;
 
 import java.awt.Graphics;
+
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
@@ -15,9 +16,10 @@ public abstract class Actor {
 	protected int ancho = 25, alto = 20; // ancho y alto que ocupa el actor en pantalla
 	protected String img; // Imagen del actor
 	protected static final int VEL_NAVE = 5;
+	protected int unidadDeTiempo = 0;
 	protected List<BufferedImage> sprites = new ArrayList<BufferedImage>(); // Lista de archivos de imagen utilizado para representarse en pantalla
 	protected BufferedImage spriteActual = null; // Sprite que representa actualmente a este actor
-	protected int velocidadDeCambioDeSprite = 0;  // Esta propiedad indica cada cu�ntas "unidades de tiempo" debemos mostrar el siguiente sprite del actor
+	protected int velocidadDeCambioDeSprite = 0;  // Esta propiedad indica cada cuantas "unidades de tiempo" debemos mostrar el siguiente sprite del actor
 	protected int velocidadX = 0; // Velocidades en cada eje
 	protected boolean markedForRemoval; // Bandera para saber si un objeto tiene que ser eliminado
 	
@@ -42,7 +44,7 @@ public abstract class Actor {
 	}
 	
 	/**
-	 * Constructor usado cuando el actor s�lo tiene un �nico sprite
+	 * Constructor usado cuando el actor solo tiene un unico sprite
 	 * @param spriteName
 	 */
 	public Actor (String spriteName) {
@@ -51,7 +53,7 @@ public abstract class Actor {
 	}
 	
 	/**
-	 * Constructor ampl�amente utilizado, indicando los nombres de los sprites a utilizar para mostrar este actor
+	 * Constructor ampliamente utilizado, indicando los nombres de los sprites a utilizar para mostrar este actor
 	 * @param spriteName
 	 */
 	public Actor (String spriteNames[]) {
@@ -77,7 +79,43 @@ public abstract class Actor {
 	 */
 	public abstract void paint(Graphics g);
 	
-	public void paintNave(Graphics2D g){
+	public List<BufferedImage> getSprites() {
+		return sprites;
+	}
+
+	public void setSprites(List<BufferedImage> sprites) {
+		this.sprites = sprites;
+	}
+
+	public BufferedImage getSpriteActual() {
+		return spriteActual;
+	}
+
+	public void setSpriteActual(BufferedImage spriteActual) {
+		this.spriteActual = spriteActual;
+	}
+
+	public int getVelocidadDeCambioDeSprite() {
+		return velocidadDeCambioDeSprite;
+	}
+
+	public void setVelocidadDeCambioDeSprite(int velocidadDeCambioDeSprite) {
+		this.velocidadDeCambioDeSprite = velocidadDeCambioDeSprite;
+	}
+
+	public int getVelocidadX() {
+		return velocidadX;
+	}
+
+	public void setVelocidadX(int velocidadX) {
+		this.velocidadX = velocidadX;
+	}
+
+	public static int getVelNave() {
+		return VEL_NAVE;
+	}
+
+	public void paintImagen(Graphics2D g){
 		g.drawImage( this.spriteActual, this.x, this.y, null);
 	}
 	
@@ -85,7 +123,25 @@ public abstract class Actor {
 	 * Método que permite que cada actor realice las acciones que necesite en la
 	 * creación de cada Frame
 	 */
-	public abstract void actua();
+	public void actua() {
+		// En el caso de que exista un array de sprites el actor actual se tratara de una animacion, para eso llevaremos a cabo los siguientes pasos
+		if (this.sprites != null && this.sprites.size() > 1) {
+			// cada vez que llaman a "actua()" se incrementara esta unidad, siempre que existan sprites
+			unidadDeTiempo++;
+			// Si la unidad de tiemplo coincide o es multiplo de la velocidad de cambio de sprite, entramos al if
+			if (unidadDeTiempo % velocidadDeCambioDeSprite == 0){
+				// Reiniciamos la unidad de tiempo
+				unidadDeTiempo = 0;
+				// Obtengo el indice del spriteActual, dentro de la lista de indices
+				int indiceSpriteActual = sprites.indexOf(this.spriteActual);
+				// Obtengo el siguiente indice de sprite, teniendo en cuenta que los sprites cambian de uno a otro en ciclo
+				int indiceSiguienteSprite = (indiceSpriteActual + 1) % sprites.size();
+				// Se selecciona el nuevo spriteActual
+				this.spriteActual = sprites.get(indiceSiguienteSprite);
+			}
+		}
+		
+	}
 
 	/**
 	 * @return the x
@@ -148,7 +204,7 @@ public abstract class Actor {
 	}
 
 	/**
-	 * Cuando una tecla se libera se desactiva la bandera booleana que se hab�a activado al pulsarla
+	 * Cuando una tecla se libera se desactiva la bandera booleana que se habia activado al pulsarla
 	 */
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
@@ -161,11 +217,11 @@ public abstract class Actor {
 	}
 	
 	/**
-	 * A partir de un array de String, cargamos en memoria la lista de im�genes que constituyen los sprites del actor
+	 * A partir de un array de String, cargamos en memoria la lista de imagenes que constituyen los sprites del actor
 	 * @param spriteNames
 	 */
 	private void cargarImagenesDesdeSpriteNames(String spriteNames[]) {
-		// Obtengo las imagenes de este actor, a partir del patron de dise�o Singleton con el que se encuentra
+		// Obtengo las imagenes de este actor, a partir del patron de diseno Singleton con el que se encuentra
 		// el ArkanoidSprite
 		for (String sprite : spriteNames) {
 			this.sprites.add(ArkanoidSprite.getInstance().getSprite(sprite));

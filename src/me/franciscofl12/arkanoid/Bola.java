@@ -13,8 +13,9 @@ public class Bola extends Actor {
 	// Propiedades privadas de la bola
 	int velocidadX = -5;
 	int velocidadY = -5;
-	public static String IMAGEN_BOLA;
+	public static String IMAGEN_BOLA = "pelota.png";
 	boolean eastereggbola = false;
+	protected static final int VEL_BOLA = 5;
 	Color[] colores = {Color.WHITE,Color.YELLOW,Color.PINK,Color.CYAN,Color.GREEN,Color.ORANGE};
 	int color = 0;
 	
@@ -22,7 +23,8 @@ public class Bola extends Actor {
 	 * Constructor sin argumentos de entrada
 	 */
 	public Bola() {
-		super();
+		super("pelota.png");
+//		super();
 	}
 
 	/**
@@ -50,9 +52,9 @@ public class Bola extends Actor {
 	 */
 	@Override
 	public void paint(Graphics g) {
-		g.setColor(colores[color]);
-		g.fillOval(this.x, this.y, 13, 13);
-		easterEggBola(g);
+//		g.setColor(colores[color]);
+//		g.fillOval(this.x, this.y, 13, 13);
+//		easterEggBola(g);
 	}
 	
 
@@ -64,6 +66,7 @@ public class Bola extends Actor {
 		if (this.x < 0 || this.x > Arkanoid.getInstance().getCanvas().getWidth()-13) {
 			this.velocidadX = -this.velocidadX;
 		}
+		;
 		
 		// Copiamos el esquema anterior para el movimiento vertical
 		this.y += this.velocidadY;
@@ -73,11 +76,27 @@ public class Bola extends Actor {
 		}
 	}
 	
+	@Override
+	public void collisionWith(Actor actorCollisioned) {
+		super.collisionWith(actorCollisioned);
+		//Compruebo si el ladrillo colisiona con la bola
+		if (actorCollisioned instanceof Player) {
+			this.velocidadY = - 5;
+			this.velocidadX = - 5;
+		}
+		else {
+			if (actorCollisioned instanceof Ladrillo) {
+				this.velocidadY = + 5;
+				this.velocidadX = + 5;
+			}
+		}
+	}
+	
 	public void easterEggBola(Graphics g) {
 			int i = 1;
 			i++;
 			g.setColor(colores[i]);
 			g.fillOval(this.x, this.y, 13, 13);
 	}
-
+	
 }
