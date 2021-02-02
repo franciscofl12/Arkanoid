@@ -103,7 +103,7 @@ public abstract class Actor {
 		this.velocidadDeCambioDeSprite = velocidadDeCambioDeSprite;
 	}
 
-	public int getVelocidadX() {
+	public double getVelocidadX() {
 		return velocidadX;
 	}
 

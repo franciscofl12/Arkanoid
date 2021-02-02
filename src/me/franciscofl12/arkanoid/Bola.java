@@ -11,8 +11,8 @@ import java.util.concurrent.TimeUnit;
 public class Bola extends Actor {
 	
 	// Propiedades privadas de la bola
-	public static int velocidadX = 0;
-	public static int velocidadY = 0;
+	public static double velocidadX = 0;
+	public static double velocidadY = 0;
 	public static String IMAGEN_BOLA = "pelota.png";
 	boolean eastereggbola = false;
 	Color[] colores = {Color.WHITE,Color.YELLOW,Color.PINK,Color.CYAN,Color.GREEN,Color.ORANGE};
@@ -22,7 +22,7 @@ public class Bola extends Actor {
 	 * Constructor sin argumentos de entrada
 	 */
 	public Bola() {
-		super("pelota.png");
+		super(IMAGEN_BOLA);
 //		super();
 	}
 
@@ -73,6 +73,10 @@ public class Bola extends Actor {
 		if (this.y < 0 || this.y > Arkanoid.getInstance().getCanvas().getHeight()-13) {
 			this.velocidadY = -this.velocidadY;
 		}
+		
+		if (this.y > Arkanoid.getInstance().getCanvas().getHeight()-13) {
+			Arkanoid.getInstance().vidaPerdida(1);
+		}
 	}
 	
 	@Override
@@ -98,7 +102,7 @@ public class Bola extends Actor {
 			g.fillOval(this.x, this.y, 13, 13);
 	}
 
-	public int getVelocidadX() {
+	public double getVelocidadX() {
 		return velocidadX;
 	}
 
@@ -106,7 +110,7 @@ public class Bola extends Actor {
 		this.velocidadX = velocidadX;
 	}
 
-	public int getVelocidadY() {
+	public double getVelocidadY() {
 		return velocidadY;
 	}
 
@@ -114,7 +118,11 @@ public class Bola extends Actor {
 		this.velocidadY = velocidadY;
 	}
 	
-	
+	//Velocidad de la bola va a ir aumentando con este metodo
+	public void velocidadAumenta(double multiplicador) {
+		this.velocidadY = velocidadY * multiplicador;
+		this.velocidadX = velocidadX * multiplicador;
+	}
 	
 	
 }

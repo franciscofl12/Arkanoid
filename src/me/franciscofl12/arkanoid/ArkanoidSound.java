@@ -1,10 +1,13 @@
 package me.franciscofl12.arkanoid;
 
 import java.applet.Applet;
+
 import java.applet.AudioClip;
 import java.net.URL;
 import java.util.HashMap;
 
+
+@SuppressWarnings("deprecation")
 public class ArkanoidSound {
 	
 	// Almacen de sonidos, se trata de un HashMap que tiene String como "claves" de los objetos y "AudioClip" como objetos
@@ -16,7 +19,7 @@ public class ArkanoidSound {
 	// Carpeta en la que se encuentran los recursos: imagenes, sonidos, etc.
 	private static String RESOURCES_FOLDER = "res/";
 	
-	public static String MUSICA = "musica.wav";
+	public static String MUSICA = "musica.mp3";
 	public static String LADRILLOELIMINADO = "explosion.wav";
 	
 	public ArkanoidSound() {
@@ -26,7 +29,7 @@ public class ArkanoidSound {
 	}
 	
 	/**
-	 * M�todo principal del patron Singleton
+	 * Metodo principal del patron Singleton
 	 * @return
 	 */
 	public static ArkanoidSound getInstance() {
@@ -70,6 +73,7 @@ public class ArkanoidSound {
 	 * Lanza un sonido, el sonido solo se escuchara una vez
 	 * @param name
 	 */
+	@SuppressWarnings("deprecation")
 	public void playSound(final String name) {
 		getAudioClip(name).play();
 	}
@@ -81,6 +85,4 @@ public class ArkanoidSound {
 	public void loopSound(final String name) {
 		getAudioClip(name).loop();
 	}
-
-
 }

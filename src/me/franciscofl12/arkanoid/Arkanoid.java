@@ -1,7 +1,9 @@
 package me.franciscofl12.arkanoid;
 
 import java.awt.BorderLayout;
+
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.KeyAdapter;
@@ -28,10 +30,14 @@ public class Arkanoid {
 	private static int espacioEntreLadrillosY = 5;
 	private static JFrame ventana = null;
 	private static List<Actor> actores = new ArrayList<Actor>();
+	private static List<Ladrillo> ladrillos = new ArrayList<Ladrillo>();
 	private static ArkanoidCanvas canvas = null;
 	static Player player = null;
 	static Bola bola = null;
+	private static int vidas = 5;
+	private static int primerMovimientoBola = 0;
 	private static Arkanoid instance = null;
+	private static boolean isGameOver = false;
 	// Lista con actores que deben incorporarse en la siguiente iteracion del juego
 	private List<Actor> newActorsForNextIteration = new ArrayList<Actor>();
 	
@@ -75,12 +81,27 @@ public class Arkanoid {
 			@Override
 			public void mouseMoved(MouseEvent e) {
 				super.mouseMoved(e);
-				player.mover(e.getX());
+				if (isGameOver == false) {
+					player.mover(e.getX());
+				}
 			}	
-			public void mouseClicked(MouseEvent e) {
-				player.setSpace(true);
+			
+		});
+		
+		
+		//Añado un MouseListener para captar cuando el usuario hace click
+		canvas.addMouseListener(new MouseAdapter() {
+			@Override
+		    public void mousePressed(MouseEvent e) {
+				super.mousePressed(e);
+				player.mousePressed(e);
+				if (primerMovimientoBola == 0) {
+					primerMovimientoBola();
+				}
 			}
 		});
+		
+
 		
 		/****
 		 * El codigo de la tecla de direccion derecha es 39, con esto sabremos y podremos
@@ -93,8 +114,9 @@ public class Arkanoid {
 				super.keyPressed(e);
 				player.keyPressed(e);
 				if (player.isSpace()) {
-					bola.velocidadY = 5;
-					bola.velocidadX = 5;
+					if (primerMovimientoBola == 0) {
+						primerMovimientoBola();
+					}
 				}
 			}
 			
@@ -116,6 +138,20 @@ public class Arkanoid {
 			
 		canvas.createBufferStrategy(2);
 		strategy = canvas.getBufferStrategy();
+		
+		
+		//Contador para calcular los segundos que pasan despues de empezar a cargar el juego
+//		long contadorDeCuandoEmpiezaElJuego = System.currentTimeMillis();
+//		long contadorDeCuandoEmpiezaElJuegoSegundo = System.currentTimeMillis();
+//		while (contadorDeCuandoEmpiezaElJuegoSegundo <= (contadorDeCuandoEmpiezaElJuego + 5*1000)) {
+//			contadorDeCuandoEmpiezaElJuegoSegundo = System.currentTimeMillis();
+//			if(contadorDeCuandoEmpiezaElJuegoSegundo >= (contadorDeCuandoEmpiezaElJuego + 5*1000)) {
+//				  if (primerMovimientoBola == 0) primerMovimientoBola();
+//				  break;
+//			}
+//			
+//		}
+		
 		
 		//Pongo en bucle la musica de fondo
 		ArkanoidSound.getInstance().loopSound(ArkanoidSound.MUSICA);
@@ -180,6 +216,7 @@ public class Arkanoid {
 				e.printStackTrace();
 			}
 		} while (true);
+		
 	}
 	
 	public void actualizaMundo() {
@@ -193,11 +230,13 @@ public class Arkanoid {
 				actorsForRemoval.add(actor);
 			}
 		}
+		
 		// Reviso si le han dado al espacio para estar pegado a la barra
 		if (player.isSpace() == false) {
 			bola.setX(player.getX()+12);
 			bola.setY(player.getY()-20);
 		}
+		
 		
 		// Elimino los actores marcados para su eliminacion
 		for (Actor actor : actorsForRemoval) {
@@ -211,7 +250,8 @@ public class Arkanoid {
 		Arkanoid.actores.addAll(newActorsForNextIteration);
 		this.newActorsForNextIteration.clear();
 		
-		
+		// Llamo al metodo para que la velocidad de la bola vaya aumentando
+		bola.velocidadAumenta(1.009);
 		
 		/****
 		 * Para cada actor comprobaremos si tiene una colision con otro actor
@@ -250,10 +290,48 @@ public class Arkanoid {
 			a.paint(g);
 			a.paintImagen(g);
 		}
+	
+		paintStatus(g);
 		
+		if (vidas <= 0) paintGameOver(g);
 		strategy.show(); 
 	}
 
+	public void paintStatus(Graphics2D g) {
+		  paintLadrillosRestantes(g);
+		  //paintLevel(g);
+		  paintVidas(g);
+//		  paintGameOver(g);
+		  
+	}
+	
+	public void paintLadrillosRestantes(Graphics2D g) {
+		// Pintamos el texto de Ladrillos Restantes
+		g.setFont(new Font("Arial", Font.BOLD,12));
+		g.setPaint(Color.white);
+		g.drawString("Ladrillos Restantes: " + ladrillos.size(), 10, canvas.getHeight() - 15);
+	}
+	
+	public void paintVidas(Graphics2D g) {
+		g.setFont(new Font("Arial", Font.BOLD,12));
+		if (vidas>=3) {
+			g.setPaint(Color.white);
+		}
+		else {
+			g.setPaint(Color.red);
+		}
+		g.drawString("Vidas: " + vidas, 150, canvas.getHeight() - 15);
+	}
+	
+	public void paintGameOver(Graphics2D g) {
+		Color miColor = new Color(0, 0, 0, 127);
+		g.setColor(miColor);
+		g.fillRect(0, 0,canvas.getWidth(),canvas.getHeight()); 
+		g.setColor(Color.white);
+		g.setFont(new Font("Arial",Font.BOLD,20));
+		g.drawString("GAME OVER", canvas.getWidth() / 2 - 65 , canvas.getHeight() / 2);
+		strategy.show();
+	}
 	
 	/**
 	 * 
@@ -261,21 +339,16 @@ public class Arkanoid {
 	 */
 	private static List<Actor> creaActores () {
 		List<Actor> actores = new ArrayList<Actor>();
+		ladrillos = new ArrayList<Ladrillo>(); //Lista de ladrillos que utilizare para saber cuantos ladrillos hay
 		
 		//Construyo un player para este juego y lo agrego a la lista
-//		player = new Player(155, 500, Player.IMAGEN_PLAYER);
 		player = new Player();
 		player.setX(155);
 		player.setY(500);
 		actores.add(player);
 		
 		//Construyo la bola para el juego y la agrego a la lista
-//		Bola bola = new Bola(155,300,Bola.IMAGEN_BOLA);
 		bola = new Bola();
-//		while (GameStart = false) {
-//			bola.setX(155);
-//			bola.setY(player.getAncho()/2);
-//		}
 		bola.setX(player.getX()+12);
 		bola.setY(player.getY()-20);
 		actores.add(bola);
@@ -295,6 +368,8 @@ public class Arkanoid {
 				l.x = i*l.getAncho()+espacioEntreLadrillosX;
 				l.y = j*l.getAlto()+espacioEntreLadrillosY;
 				actores.add(l);
+				ladrillos.add(l);
+				
 				espacioEntreLadrillosX++;espacioEntreLadrillosX++;espacioEntreLadrillosX++;
 			}
 			espacioEntreLadrillosY ++;espacioEntreLadrillosY ++;espacioEntreLadrillosY ++;
@@ -303,13 +378,40 @@ public class Arkanoid {
 		return actores;
 	}
 	
+	/****
+	 * 
+	 * @return canvas
+	 */
+	
 	public ArkanoidCanvas getCanvas() {
 		return canvas;
 	}
-
+	
+	/****
+	 * 
+	 * @param newActor, Agregar los nuevos actores a la escena
+	 */
 	public void addNewActorToNextIteration (Actor newActor) {
 		this.newActorsForNextIteration.add(newActor);
 	}
-
 	
+	//Metodo para mover a la bola por primera vez
+	public static void primerMovimientoBola() {
+		primerMovimientoBola++; //Variable auxiliar para saber si se ha ejecutado este metodo
+		bola.velocidadY = 5;
+		bola.velocidadX = 5;
+	}
+	
+	public void vidaPerdida(int dificultad) {
+		if (!(vidas <= 0)) vidas -= dificultad;
+		if (vidas <= 0) {
+			setGameOver();
+		}
+	}
+	
+	public void setGameOver(){
+		isGameOver = true;
+		bola.velocidadY = 0.1;
+		bola.velocidadX = 0.1;
+	}
 }

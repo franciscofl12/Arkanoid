@@ -2,6 +2,7 @@ package me.franciscofl12.arkanoid;
 
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 
 /**
  * Clase que representa un player en el juego
@@ -95,6 +96,13 @@ public class Player extends Actor {
 		updateSpeed();
 	}
 	
+	public void mousePressed(MouseEvent e) {
+		this.setSpace(true);
+		switch (e.getButton()) {
+			case MouseEvent.BUTTON1 : space = true; break;
+		}
+	}
+	
 	//Utilizaremos este metodo para hacer el movimiento de la nave	
 	protected void updateSpeed() {
 		this.velocidadX = 0;
@@ -110,4 +118,5 @@ public class Player extends Actor {
 		this.space = space;
 	}
 
+	
 }
