@@ -113,6 +113,7 @@ public class Arkanoid {
 		
 		//Pongo en bucle la musica de fondo
 		ArkanoidSound.getInstance().loopSound(ArkanoidSound.MUSICA);
+//		ArkanoidSound.getInstance().playSound(ArkanoidSound.getInstance().MUSICA);
 	}
 
 	/**
