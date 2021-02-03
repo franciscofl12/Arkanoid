@@ -103,8 +103,14 @@ public class Arkanoid {
 		    public void mousePressed(MouseEvent e) {
 				super.mousePressed(e);
 				player.mousePressed(e);
-				if (primerMovimientoBola == 0) {
-					primerMovimientoBola();
+				if (isGameStarted == true) {
+					if (primerMovimientoBola == 0) {
+						primerMovimientoBola();
+
+					}
+				}
+				if (isGameStarted == false) {
+					isGameStarted = true;
 				}
 			}
 		});
@@ -121,7 +127,7 @@ public class Arkanoid {
 			public void keyPressed(KeyEvent e) {
 				super.keyPressed(e);
 				player.keyPressed(e);
-				if (player.isSpace()) {
+				if (player.isSpace() && isGameStarted == true) {
 					if (primerMovimientoBola == 0) {
 						primerMovimientoBola();
 					}
@@ -172,8 +178,8 @@ public class Arkanoid {
 	 */
 	public static void main(String[] args) {
 		// Comienzo un bucle, que consistirá en el juego completo.
-		//Arkanoid.getInstance().pantallaPrincipal();
-		Arkanoid.getInstance().juego();
+		Arkanoid.getInstance().pantallaPrincipal();
+		
 	}
 	
 	/**
@@ -203,8 +209,35 @@ public class Arkanoid {
 			g.drawImage(ArkanoidSprite.getInstance().getSprite("2player.png"),115,270,null); // 2 Jugadores
 			g.drawImage(ArkanoidSprite.getInstance().getSprite("exit.png"),111,295,null); // Salir
 			g.drawImage(ArkanoidSprite.getInstance().getSprite("textodebajo.png"),90,500,null); // Copyright ©
+			 if (isGameStarted == true) {
+				 if (movimientoMenu >= 245 && movimientoMenu<=269) {
+					 Arkanoid.getInstance().juego();
+					}
+					else {
+						if (movimientoMenu >= 270 && movimientoMenu<=294) {
+							JOptionPane.showInputDialog("No esta activado el juego para 2 jugadores");
+							Arkanoid.getInstance().juego();
+						}
+						else {
+							if (movimientoMenu >= 295 && movimientoMenu<=320) {
+								cerrarAplicacion();
+							}
+							else {
+								if (movimientoMenu < 245) {
+									Arkanoid.getInstance().juego();
+								}
+								else {
+									if (movimientoMenu > 320) {
+										cerrarAplicacion();
+									}
+								}
+							}
+						}
+					}
+			 }
 		    strategy.show();
 		} while (true);
+		
 		
 	}
 
@@ -258,7 +291,7 @@ public class Arkanoid {
 		}
 		
 		// Reviso si le han dado al espacio para estar pegado a la barra
-		if (player.isSpace() == false) {
+		if (isGameStarted = true && primerMovimientoBola == 0) {
 			bola.setX(player.getX()+12);
 			bola.setY(player.getY()-20);
 		}
@@ -356,6 +389,18 @@ public class Arkanoid {
 		g.setFont(new Font("Arial",Font.BOLD,20));
 		g.drawString("GAME OVER", canvas.getWidth() / 2 - 65 , canvas.getHeight() / 2);
 		strategy.show();
+		String [] opciones ={"Continuar","Salir"};
+		int eleccion = JOptionPane.showOptionDialog(ventana,"¿Desea continuar en el juego?","Salir de la aplicación/Seguir jugando",
+		JOptionPane.YES_NO_OPTION,
+		JOptionPane.QUESTION_MESSAGE, null, opciones, "Aceptar");
+		if (eleccion == JOptionPane.NO_OPTION) {
+			System.exit(0);
+		}
+		if (eleccion == JOptionPane.YES_OPTION) {
+			isGameStarted = false;
+			isGameOver = false;
+			pantallaPrincipal();
+		}
 	}
 	
 	/**
