@@ -7,6 +7,8 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferStrategy;
 import java.util.List;
 
+import javax.swing.JButton;
+
 public class ArkanoidCanvas extends Canvas {
 
 	/**

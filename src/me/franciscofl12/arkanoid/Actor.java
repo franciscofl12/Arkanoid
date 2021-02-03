@@ -116,7 +116,7 @@ public abstract class Actor {
 	}
 
 	public void paintImagen(Graphics2D g){
-		g.drawImage( this.spriteActual, this.x, this.y, null);
+		g.drawImage(this.spriteActual, this.x, this.y, null);
 	}
 	
 	/**

@@ -13,9 +13,15 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import javax.imageio.ImageIO;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -28,6 +34,7 @@ public class Arkanoid {
 	private static int FPS = 60;
 	private static int espacioEntreLadrillosX = 5;
 	private static int espacioEntreLadrillosY = 5;
+	private static int movimientoMenu;
 	private static JFrame ventana = null;
 	private static List<Actor> actores = new ArrayList<Actor>();
 	private static List<Ladrillo> ladrillos = new ArrayList<Ladrillo>();
@@ -38,6 +45,7 @@ public class Arkanoid {
 	private static int primerMovimientoBola = 0;
 	private static Arkanoid instance = null;
 	private static boolean isGameOver = false;
+	private static boolean isGameStarted = false;
 	// Lista con actores que deben incorporarse en la siguiente iteracion del juego
 	private List<Actor> newActorsForNextIteration = new ArrayList<Actor>();
 	
@@ -53,11 +61,7 @@ public class Arkanoid {
 	
 	public Arkanoid() {
 		ventana = new JFrame("Arkanoid by franciscofl12");
-//		try {
-//			ventana.setIconImage(ImageIO.read(new File("resources.images/icono.png")));
-//		} catch (IOException e1) {
-//			e1.printStackTrace();
-//		}
+		ventana.setIconImage(ArkanoidSprite.getInstance().getSprite("icono.png"));
 		ventana.setBounds(0, 0, 360, 600);
 		
 		// Para colocar objetos sobre la ventana debo asignarle un "layout" (plantilla) al panel principal de la ventana
@@ -83,6 +87,10 @@ public class Arkanoid {
 				super.mouseMoved(e);
 				if (isGameOver == false) {
 					player.mover(e.getX());
+				}
+				if (isGameStarted == false) {
+					movimientoMenu = e.getY();
+					seleccionMenu(e.getY());
 				}
 			}	
 			
@@ -164,7 +172,7 @@ public class Arkanoid {
 	 */
 	public static void main(String[] args) {
 		// Comienzo un bucle, que consistirá en el juego completo.
-		Arkanoid.getInstance().juego();
+		Arkanoid.getInstance().pantallaPrincipal();
 	}
 	
 	/**
@@ -180,14 +188,31 @@ public class Arkanoid {
 		}
 	}
 	
-	
-	
+	/****
+	 * Pantalla principal para empezar el juego
+	 */
+	public void pantallaPrincipal() {
+		do {
+			Graphics2D g = (Graphics2D) strategy.getDrawGraphics();
+			
+			g.drawImage(ArkanoidSprite.getInstance().getSprite("bg.jpg"),0,0,null); // Fondo
+			g.drawImage(ArkanoidSprite.getInstance().getSprite("Arkanoid-logo.png"),20,20,null); //Arkanoid Logo
+			g.drawImage(ArkanoidSprite.getInstance().getSprite("seleccion.png"),65,seleccionMenu(movimientoMenu),null); // seleccion imagen ">"
+			g.drawImage(ArkanoidSprite.getInstance().getSprite("1player.png"),115,245,null); // 1 Jugador
+			g.drawImage(ArkanoidSprite.getInstance().getSprite("2player.png"),115,270,null); // 2 Jugadores
+			g.drawImage(ArkanoidSprite.getInstance().getSprite("exit.png"),111,295,null); // Salir
+			g.drawImage(ArkanoidSprite.getInstance().getSprite("textodebajo.png"),90,500,null); // Copyright ©
+		    strategy.show();
+		} while (true);
+		
+	}
 
 	
 	/**
 	 * Bucle del juego principal
 	 */
 	public void juego () {
+		isGameStarted = true;
 		int millisPorCadaFrame = 1000 / FPS;
 		do {
 			// Redibujo la escena tantas veces por segundo como indique la variable FPS
@@ -413,5 +438,33 @@ public class Arkanoid {
 		isGameOver = true;
 		bola.velocidadY = 0.1;
 		bola.velocidadX = 0.1;
+	}
+	
+	//245 , 270 , 295
+	public int seleccionMenu(int x) {
+		if (x >= 245 && x<=269) {
+			return 245;
+		}
+		else {
+			if (x >= 270 && x<=294) {
+				return 270;
+			}
+			else {
+				if (x >= 295 && x<=320) {
+					return 295;
+				}
+				else {
+					if (x < 245) {
+						return 245;
+					}
+					else {
+						if (x > 320) {
+							return 295;
+						}
+					}
+				}
+			}
+		}
+		return x;
 	}
 }
