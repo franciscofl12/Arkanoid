@@ -172,7 +172,8 @@ public class Arkanoid {
 	 */
 	public static void main(String[] args) {
 		// Comienzo un bucle, que consistirá en el juego completo.
-		Arkanoid.getInstance().pantallaPrincipal();
+		//Arkanoid.getInstance().pantallaPrincipal();
+		Arkanoid.getInstance().juego();
 	}
 	
 	/**
@@ -308,8 +309,7 @@ public class Arkanoid {
 		
 		Graphics2D g = (Graphics2D) strategy.getDrawGraphics();
 		
-		g.setColor(Color.black);
-		g.fillRect(0, 0,canvas.getWidth(),canvas.getHeight()); 
+		g.drawImage(ArkanoidSprite.getInstance().getSprite("fondojuego.png"),0,0,null); // Fondo
 		// Pinto cada uno de los actores
 		for (Actor a : this.actores) {
 			a.paint(g);
