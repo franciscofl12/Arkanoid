@@ -15,12 +15,15 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -258,6 +261,8 @@ public class Arkanoid {
 			// Actualizo el mundo
 			actualizaMundo();
 			
+			musica("musica3.wav");
+			
 			// Recorro todos los actores, consiguiendo que cada uno de ellos actúe
 			for (Actor a : actores) {
 				a.actua();
@@ -295,7 +300,6 @@ public class Arkanoid {
 			bola.setX(player.getX()+12);
 			bola.setY(player.getY()-20);
 		}
-		
 		
 		// Elimino los actores marcados para su eliminacion
 		for (Actor actor : actorsForRemoval) {
@@ -512,4 +516,22 @@ public class Arkanoid {
 		}
 		return x;
 	}
+	
+	public void musica(String musicaurl) {
+		try {
+            
+            // Se obtiene un Clip de sonido
+            Clip sonido = AudioSystem.getClip();
+            
+            // Se carga con un fichero wav
+            sonido.open(AudioSystem.getAudioInputStream(new File("src/me/franciscofl12/arkanoid/res/" + musicaurl)));
+            
+            // Comienza la reproducción
+            sonido.start();
+   
+        } catch (Exception e) {
+            System.out.println("" + e);
+        }
+	}
+	
 }

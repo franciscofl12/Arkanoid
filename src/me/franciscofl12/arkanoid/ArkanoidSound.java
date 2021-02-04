@@ -3,6 +3,7 @@ package me.franciscofl12.arkanoid;
 import java.applet.Applet;
 
 import java.applet.AudioClip;
+import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.HashMap;
 
@@ -85,4 +86,5 @@ public class ArkanoidSound {
 	public void loopSound(final String name) {
 		getAudioClip(name).loop();
 	}
+
 }
