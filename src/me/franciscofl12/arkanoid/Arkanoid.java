@@ -22,8 +22,11 @@ import java.util.Date;
 import java.util.List;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.DataLine;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -44,11 +47,13 @@ public class Arkanoid {
 	private static ArkanoidCanvas canvas = null;
 	static Player player = null;
 	static Bola bola = null;
+	private static int nivel = 1;
 	private static int vidas = 5;
 	private static int primerMovimientoBola = 0;
 	private static Arkanoid instance = null;
 	private static boolean isGameOver = false;
 	private static boolean isGameStarted = false;
+	private static boolean isLevel1Finished = false;
 	// Lista con actores que deben incorporarse en la siguiente iteracion del juego
 	private List<Actor> newActorsForNextIteration = new ArrayList<Actor>();
 	
@@ -261,7 +266,7 @@ public class Arkanoid {
 			// Actualizo el mundo
 			actualizaMundo();
 			
-			musica("musica3.wav");
+			//musica("musica.wav");
 			
 			// Recorro todos los actores, consiguiendo que cada uno de ellos actúe
 			for (Actor a : actores) {
@@ -304,7 +309,13 @@ public class Arkanoid {
 		// Elimino los actores marcados para su eliminacion
 		for (Actor actor : actorsForRemoval) {
 			actores.remove(actor);
+			if (actor instanceof Ladrillo) {
+				ladrillos.remove(actor);
+			}
 		}
+		
+		//Comprobamos si el nivel 1 esta finalizado
+		isLevel1Finished();
 		
 		// Limpio la lista de actores para eliminar
 		actorsForRemoval.clear();
@@ -352,28 +363,30 @@ public class Arkanoid {
 			a.paint(g);
 			a.paintImagen(g);
 		}
-	
+		
+		//Pintamos el estado del juego
 		paintStatus(g);
 		
-		if (vidas <= 0) paintGameOver(g);
 		strategy.show(); 
 	}
 
 	public void paintStatus(Graphics2D g) {
 		  paintLadrillosRestantes(g);
-		  //paintLevel(g);
+		  paintLevel(g);
 		  paintVidas(g);
-//		  paintGameOver(g);
+		  if (vidas <= 0) paintGameOver(g);
+		  if (isLevel1Finished == true) paintLevel1Finished(g);
 		  
 	}
 	
+	// Pintamos el texto de Ladrillos Restantes
 	public void paintLadrillosRestantes(Graphics2D g) {
-		// Pintamos el texto de Ladrillos Restantes
 		g.setFont(new Font("Arial", Font.BOLD,12));
 		g.setPaint(Color.white);
 		g.drawString("Ladrillos Restantes: " + ladrillos.size(), 10, canvas.getHeight() - 15);
 	}
-	
+
+	// Pintamos las vidas
 	public void paintVidas(Graphics2D g) {
 		g.setFont(new Font("Arial", Font.BOLD,12));
 		if (vidas>=3) {
@@ -385,6 +398,13 @@ public class Arkanoid {
 		g.drawString("Vidas: " + vidas, 150, canvas.getHeight() - 15);
 	}
 	
+	// Pinto el nivel del juego
+	public void paintLevel(Graphics2D g) {
+		g.setFont(new Font("Arial", Font.BOLD,12));
+		g.setPaint(Color.white);
+		g.drawString("Nivel: " + nivel, 205, canvas.getHeight() - 15);
+	}
+	
 	public void paintGameOver(Graphics2D g) {
 		Color miColor = new Color(0, 0, 0, 127);
 		g.setColor(miColor);
@@ -392,19 +412,18 @@ public class Arkanoid {
 		g.setColor(Color.white);
 		g.setFont(new Font("Arial",Font.BOLD,20));
 		g.drawString("GAME OVER", canvas.getWidth() / 2 - 65 , canvas.getHeight() / 2);
+		isGameOver = true;
 		strategy.show();
-		String [] opciones ={"Continuar","Salir"};
-		int eleccion = JOptionPane.showOptionDialog(ventana,"¿Desea continuar en el juego?","Salir de la aplicación/Seguir jugando",
-		JOptionPane.YES_NO_OPTION,
-		JOptionPane.QUESTION_MESSAGE, null, opciones, "Aceptar");
-		if (eleccion == JOptionPane.NO_OPTION) {
-			System.exit(0);
-		}
-		if (eleccion == JOptionPane.YES_OPTION) {
-			isGameStarted = false;
-			isGameOver = false;
-			pantallaPrincipal();
-		}
+	}
+	
+	public void paintLevel1Finished(Graphics2D g) {
+		Color miColor = new Color(0, 0, 0, 127);
+		g.setColor(miColor);
+		g.fillRect(0, 0,canvas.getWidth(),canvas.getHeight()); 
+		g.setColor(Color.yellow);
+		g.setFont(new Font("Arial",Font.BOLD,20));
+		g.drawString("HAS GANADO", canvas.getWidth() / 2 - 65 , canvas.getHeight() / 2);
+		strategy.show();
 	}
 	
 	/**
@@ -438,7 +457,7 @@ public class Arkanoid {
 						aux--;
 					}
 				}
-				Ladrillo l = new Ladrillo(aux);
+				Ladrillo l = new Ladrillo(aux,nivel);
 				l.x = i*l.getAncho()+espacioEntreLadrillosX;
 				l.y = j*l.getAlto()+espacioEntreLadrillosY;
 				actores.add(l);
@@ -515,6 +534,14 @@ public class Arkanoid {
 			}
 		}
 		return x;
+	}
+	
+	public boolean isLevel1Finished() {
+		if (ladrillos.size() == 0) {
+			nivel = 2;
+			isLevel1Finished = true;
+		}
+		return isLevel1Finished;
 	}
 	
 	public void musica(String musicaurl) {

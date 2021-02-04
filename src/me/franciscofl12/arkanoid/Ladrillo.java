@@ -15,13 +15,17 @@ public class Ladrillo extends Actor {
 	private String nombre; // Nombre que recibe el ladrillo
 	String[] colores = {"ladrillorojo.png","ladrilloamarillo.png","ladrillorosa.png","ladrilloazul.png","ladrilloverde.png","ladrillonaranja.png"};
 	private int color;
+	private int resistencia;
+	private Ladrillo lastLadrilloEliminated; // Ultimo ladrillo eliminado
 	
 	/**
 	 * Constructor sin argumentos de entrada
+	 * @param nivel 
 	 */
-	public Ladrillo(int color) {
+	public Ladrillo(int color, int nivel) {
 		super(IMAGEN_LADRILLO);	
 		IMAGEN_LADRILLO = colores[color];
+		this.resistencia = nivel;
 	}
 
 	/**
@@ -31,10 +35,11 @@ public class Ladrillo extends Actor {
 	 * @param img
 	 * @param nombre
 	 */
-	public Ladrillo(int x, int y, String img, String nombre, int color) {
+	public Ladrillo(int x, int y, String img, String nombre, int color,int nivel) {
 		super(x, y, img);
 		this.nombre = nombre;
 		this.color = color;
+		this.resistencia = nivel;
 	}
 	
 	// Acciones de cada ladrillo
@@ -81,15 +86,19 @@ public class Ladrillo extends Actor {
 	 */
 	@Override
 	public void collisionWith(Actor actorCollisioned) {
-		super.collisionWith(actorCollisioned);
+	super.collisionWith(actorCollisioned);
+	this.resistencia--;
+	Arkanoid.getInstance().bola.setY(Arkanoid.getInstance().bola.getY()+5);
 		//Compruebo si el ladrillo colisiona con la bola
 		if (actorCollisioned instanceof Bola) {
-			// Si este actor colisiona, debo eliminar el ladrilo
-			this.setMarkedForRemoval(true);
-			//Crearemos una explosion , que ejecutara una secuencia de sprites
-			createExplosion();
-			// Lanzo el sonido que corresponde a una explosi�n
-		   	ArkanoidSound.getInstance().playSound(ArkanoidSound.getInstance().LADRILLOELIMINADO);
+			if (this.resistencia <= 0) {
+				// Si este actor colisiona, debo eliminar el ladrilo
+				this.setMarkedForRemoval(true);
+				//Crearemos una explosion , que ejecutara una secuencia de sprites
+				createExplosion();
+				// Lanzo el sonido que corresponde a una explosi�n
+			   	ArkanoidSound.getInstance().playSound(ArkanoidSound.getInstance().LADRILLOELIMINADO);
+			}
 		}
 	}
 	
@@ -99,4 +108,14 @@ public class Ladrillo extends Actor {
 		explosion.setY(this.y); 
         Arkanoid.getInstance().addNewActorToNextIteration(explosion);
 	}
+
+	public Ladrillo getLastLadrilloEliminated() {
+		return lastLadrilloEliminated;
+	}
+
+	public void setLastLadrilloEliminated(Ladrillo lastLadrilloEliminated) {
+		this.lastLadrilloEliminated = lastLadrilloEliminated;
+	}
+	
+	
 }
