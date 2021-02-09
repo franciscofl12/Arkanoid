@@ -1,2 +1,2 @@
 # Arkanoid
-Arkanoid made by franciscofl12
+Simple Arkanoid not finished
